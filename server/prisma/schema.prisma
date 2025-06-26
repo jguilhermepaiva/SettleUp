@@ -1,0 +1,86 @@
+// Este é o arquivo /server/prisma/schema.prisma
+
+// 1. Configuração do Prisma Client
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Configuração da Conexão com o Banco de Dados
+datasource db {
+  provider = "postgresql"
+  // A URL de conexão é lida de uma variável de ambiente para segurança
+  url      = env("DATABASE_URL")
+}
+
+// 3. Seus Modelos de Dados (nosso rascunho, traduzido para Prisma)
+
+model User {
+  id            String   @id @default(uuid())
+  username      String   @unique
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  // Relações
+  groupsCreated    Group[]           @relation("Creator")
+  groupsMemberOf   GroupMember[]
+  expensesPaid     Expense[]         @relation("Payer")
+  expenseShares    ExpenseParticipant[]
+}
+
+model Group {
+  id          String   @id @default(uuid())
+  name        String
+  description String? // O '?' torna o campo opcional
+  creator_id  String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Relações
+  creator     User          @relation("Creator", fields: [creator_id], references: [id])
+  members     GroupMember[]
+  expenses    Expense[]
+}
+
+model GroupMember {
+  user_id   String
+  group_id  String
+  joined_at DateTime @default(now())
+
+  // Relações
+  user      User     @relation(fields: [user_id], references: [id])
+  group     Group    @relation(fields: [group_id], references: [id])
+
+  // Chave primária composta para garantir que um usuário só pode entrar em um grupo uma vez
+  @@id([user_id, group_id])
+}
+
+model Expense {
+  id           String    @id @default(uuid())
+  description  String
+  amount       Decimal   @db.Decimal(10, 2) // Usando Decimal para dinheiro
+  date         DateTime  @default(now()) @db.Date
+  group_id     String
+  payer_id     String
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  // Relações
+  group        Group                @relation(fields: [group_id], references: [id])
+  payer        User                 @relation("Payer", fields: [payer_id], references: [id])
+  participants ExpenseParticipant[]
+}
+
+model ExpenseParticipant {
+  expense_id   String
+  user_id      String
+  share_amount Decimal  @db.Decimal(10, 2)
+
+  // Relações
+  expense      Expense  @relation(fields: [expense_id], references: [id])
+  user         User     @relation(fields: [user_id], references: [id])
+
+  // Chave primária composta
+  @@id([expense_id, user_id])
+}
