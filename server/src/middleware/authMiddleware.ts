@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 
 // Estende a interface Request do Express para incluir nossa propriedade 'user'
-interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequest extends Request {
   user?: {
     userId: string;
   };

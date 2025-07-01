@@ -1,0 +1,28 @@
+# docker-compose.yml
+# Versão atualizada com healthcheck
+
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: settleup-db
+    restart: always
+    environment:
+      # Usando a senha simples para o teste
+      POSTGRES_USER: settleup_user
+      POSTGRES_PASSWORD: supersecret 
+      POSTGRES_DB: settleup_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    # O healthcheck verifica se o banco de dados está saudável e pronto
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U settleup_user -d settleup_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
