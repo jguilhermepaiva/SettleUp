@@ -14,12 +14,14 @@ import {
   Button, 
   Container, 
   Box, 
-  // O Grid foi removido para usarmos uma abordagem mais simples com Box e Flexbox
   CircularProgress, 
   Alert,
   Paper
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+
+// 1. Importe sua imagem local a partir da pasta assets
+import friendsImage from '../assets/friends.jpg'; 
 
 export const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth();
@@ -71,13 +73,9 @@ export const DashboardPage: React.FC = () => {
       return <Alert severity="error" sx={{ mt: 4 }}>Erro ao carregar dados: {error}</Alert>;
     }
     return (
-      // Correção: Substituímos o <Grid container> por um <Box> com display 'flex'.
-      // Isso cria um layout de duas colunas em telas maiores e empilha em telas menores.
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4, mt: 2 }}>
-        
-        {/* Coluna da Esquerda: Criar Grupo */}
         <Box sx={{ width: { xs: '100%', md: '40%' } }}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+          <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
             <Typography variant="h6" component="h2" gutterBottom>
               Criar um Novo Grupo
             </Typography>
@@ -86,26 +84,23 @@ export const DashboardPage: React.FC = () => {
             {groupCreationSuccess && <Alert severity="success" sx={{ mt: 2 }}>{groupCreationSuccess}</Alert>}
           </Paper>
         </Box>
-        
-        {/* Coluna da Direita: Meus Grupos */}
         <Box sx={{ width: { xs: '100%', md: '60%' } }}>
-          <Paper elevation={2} sx={{ p: 3, height: '100%' }}>
+          <Paper elevation={3} sx={{ p: 3, height: '100%' }}>
             <Typography variant="h6" component="h2" gutterBottom>
               Meus Grupos
             </Typography>
             <GroupList refreshTrigger={refreshTrigger} />
           </Paper>
         </Box>
-
       </Box>
     );
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+    <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
+      <AppBar position="static" elevation={1}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
             SettleUp
           </Typography>
           <Typography sx={{ mr: 2 }}>
@@ -115,12 +110,32 @@ export const DashboardPage: React.FC = () => {
             color="inherit" 
             onClick={logout}
             startIcon={<LogoutIcon />}
+            sx={{ textTransform: 'none' }}
           >
             Sair
           </Button>
         </Toolbar>
       </AppBar>
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+
+      <Box
+        sx={{
+          height: '600px',
+          backgroundImage: `url(${friendsImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.6)'
+        }}
+      >
+        <Typography variant="h3" component="h1" sx={{ fontWeight: 'bold', textAlign: 'center',  marginTop:'-10%' }}>
+          Bem-vindo ao seu Dashboard!
+        </Typography>
+      </Box>
+
+      <Container maxWidth="lg" sx={{ mt: -8, mb: 4, position: 'relative', zIndex: 1, marginTop:'-15%' }}>
         {renderContent()}
       </Container>
     </Box>

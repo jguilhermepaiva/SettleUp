@@ -1,9 +1,12 @@
+// /client/src/App.tsx
+
 import React, { useState } from 'react';
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { useAuth } from './hooks/useAuth';
-import { CssBaseline, Container } from '@mui/material'; // Importa o CssBaseline
+import { CssBaseline, ThemeProvider, Box, Typography, Link } from '@mui/material';
+import { theme } from './theme';
 import './App.css';
 
 type AuthView = 'login' | 'register';
@@ -15,26 +18,16 @@ function AuthRoutes() {
   };
 
   return (
-    <div>
+    // O Container foi removido daqui e movido para dentro da LoginPage/RegisterPage
+    <Box>
       {currentView === 'register' ? <RegisterPage /> : <LoginPage />}
-      <nav style={{ padding: '20px', textAlign: 'center' }}>
-        {currentView === 'register' ? (
-          <p>
-            Já tem uma conta?{' '}
-            <button onClick={toggleView} style={{ all: 'unset', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
-              Faça login
-            </button>
-          </p>
-        ) : (
-          <p>
-            Não tem uma conta?{' '}
-            <button onClick={toggleView} style={{ all: 'unset', color: 'blue', cursor: 'pointer', textDecoration: 'underline' }}>
-              Registre-se
-            </button>
-          </p>
-        )}
-      </nav>
-    </div>
+      <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
+        {currentView === 'register' ? 'Já tem uma conta? ' : 'Não tem uma conta? '}
+        <Link component="button" variant="body2" onClick={toggleView}>
+          {currentView === 'register' ? 'Faça login' : 'Registre-se'}
+        </Link>
+      </Typography>
+    </Box>
   );
 }
 
@@ -42,12 +35,14 @@ function App() {
   const { user } = useAuth(); 
 
   return (
-    <>
-      <CssBaseline /> {/* Adiciona o CssBaseline para normalizar estilos */}
-      <Container component="main" sx={{ pt: 2, pb: 2 }}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <div className="App">
+        {/* O Container foi removido daqui para permitir que o DashboardPage
+            controle o seu próprio layout de tela cheia. */}
         {user ? <DashboardPage /> : <AuthRoutes />}
-      </Container>
-    </>
+      </div>
+    </ThemeProvider>
   );
 }
 
