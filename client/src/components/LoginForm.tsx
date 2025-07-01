@@ -1,7 +1,6 @@
-// /client/src/components/LoginForm.tsx
-
 import React, { useState } from 'react';
 import type { LoginData } from '../services/apiService';
+import { Box, TextField, Button, CircularProgress } from '@mui/material';
 
 interface LoginFormProps {
   onSubmit: (data: LoginData) => Promise<void>;
@@ -18,26 +17,39 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => 
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '300px' }}>
-      <input
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
+    >
+      <TextField
+        label="Email"
+        variant="outlined"
         type="email"
-        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
       />
-      <input
+      <TextField
+        label="Senha"
+        variant="outlined"
         type="password"
-        placeholder="Senha"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
       />
-      <button type="submit" disabled={isLoading} style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>
-        {isLoading ? 'Entrando...' : 'Entrar'}
-      </button>
-    </form>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={isLoading}
+        size="large"
+        sx={{ mt: 1 }}
+      >
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Entrar'}
+      </Button>
+    </Box>
   );
 };

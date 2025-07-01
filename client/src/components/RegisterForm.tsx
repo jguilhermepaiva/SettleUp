@@ -1,7 +1,6 @@
-// /client/src/components/RegisterForm.tsx
-
 import React, { useState } from 'react';
 import type { RegisterData } from '../services/apiService';
+import { Box, TextField, Button, CircularProgress, Alert } from '@mui/material';
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterData) => Promise<void>;
@@ -12,62 +11,73 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // Novo estado para a confirmação de senha
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    // Validação no lado do cliente antes de enviar
     if (password !== confirmPassword) {
       setError('As senhas não coincidem!');
       return;
     }
-    setError(''); // Limpa o erro se as senhas coincidirem
+    setError('');
     onSubmit({ username, email, password, confirmPassword });
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', width: '300px' }}>
-      {error && <p style={{ color: 'red', margin: 0, textAlign: 'center' }}>{error}</p>}
-      <input
-        type="text"
-        placeholder="Nome de usuário"
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
+    >
+      {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
+      <TextField
+        label="Nome de usuário"
+        variant="outlined"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
       />
-      <input
+      <TextField
+        label="Email"
+        variant="outlined"
         type="email"
-        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
       />
-      <input
+      <TextField
+        label="Senha"
+        variant="outlined"
         type="password"
-        placeholder="Senha"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
-        minLength={6}
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
+        inputProps={{ minLength: 6 }}
       />
-      {/* Novo campo para confirmar a senha */}
-      <input
+      <TextField
+        label="Confirmar senha"
+        variant="outlined"
         type="password"
-        placeholder="Confirmar senha"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
-        minLength={6}
-        style={{ padding: '10px', fontSize: '16px' }}
+        fullWidth
+        inputProps={{ minLength: 6 }}
       />
-      <button type="submit" disabled={isLoading} style={{ padding: '10px', fontSize: '16px', cursor: 'pointer' }}>
-        {isLoading ? 'Registrando...' : 'Registrar'}
-      </button>
-    </form>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={isLoading}
+        size="large"
+        sx={{ mt: 1 }}
+      >
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
+      </Button>
+    </Box>
   );
 };

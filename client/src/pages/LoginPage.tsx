@@ -1,10 +1,9 @@
-// /client/src/pages/LoginPage.tsx
-
 import React, { useState } from 'react';
 import { LoginForm } from '../components/LoginForm';
 import { apiService } from '../services/apiService';
 import type { LoginData } from '../services/apiService';
 import { useAuth } from '../hooks/useAuth';
+import { Container, Box, Typography, Alert } from '@mui/material';
 
 export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,12 +17,7 @@ export const LoginPage: React.FC = () => {
 
     try {
       const result = await apiService.loginUser(data);
-      console.log('Login bem-sucedido, token recebido:', result.token);
-      
-      // Ao chamar login, o AuthContext será atualizado,
-      // e o App.tsx irá re-renderizar, mostrando o Dashboard.
       login(result.user, result.token);
-      
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -36,12 +30,23 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '50px' }}>
-      <h1>Entrar no SettleUp</h1>
-      <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-      {/* A mensagem de sucesso foi removida. Se houver um erro, ele será mostrado.
-          Se houver sucesso, o usuário será redirecionado. */}
-      {error && <p style={{ color: 'red', marginTop: '10px' }}>Erro: {error}</p>}
-    </div>
+    <Container component="main" maxWidth="xs">
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          Entrar no SettleUp
+        </Typography>
+        <Box sx={{ mt: 3, width: '100%' }}>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        </Box>
+      </Box>
+    </Container>
   );
 };

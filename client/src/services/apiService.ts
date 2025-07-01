@@ -1,5 +1,3 @@
-// /client/src/services/apiService.ts
-
 const API_BASE_URL = 'http://localhost:3001/api';
 
 // --- Interfaces de Dados ---
@@ -13,6 +11,20 @@ export interface RegisterData {
 export interface LoginData {
   email: string;
   password: string;
+}
+
+export interface CreateGroupData {
+  name: string;
+  description?: string;
+}
+
+export interface Group {
+  id: string;
+  name: string;
+  description: string | null;
+  creator_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 // --- Função Central de Fetch ---
@@ -72,6 +84,19 @@ export const apiService = {
 
   getProfile: () => {
     return apiFetch('/users/me', {
+      method: 'GET',
+    });
+  },
+
+  createGroup: (data: CreateGroupData) => {
+    return apiFetch('/groups', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+  
+  getGroups: (): Promise<Group[]> => {
+    return apiFetch('/groups', {
       method: 'GET',
     });
   },
