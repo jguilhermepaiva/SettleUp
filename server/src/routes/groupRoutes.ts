@@ -5,7 +5,11 @@ import expenseRoutes from './expenseRoutes';
 
 const router = Router();
 
+
+router.post('/join', authMiddleware, groupController.join);
+
 // Todas as rotas neste ficheiro serão protegidas pelo middleware de autenticação
+
 router.use(authMiddleware);
 
 // POST /api/groups/ -> Cria um novo grupo

@@ -82,4 +82,31 @@ export const groupController = {
       }
     }
   },
+
+  join: async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) {
+        res.status(400).json({ message: 'ID do utilizador não encontrado no token.' });
+        return;
+      }
+
+      // O código de convite vem do corpo da requisição
+      const { inviteCode } = req.body;
+      if (!inviteCode) {
+        res.status(400).json({ message: 'O código de convite é obrigatório.' });
+        return;
+      }
+
+      const group = await groupService.joinGroup(inviteCode, userId);
+
+      res.status(200).json({ message: `Bem-vindo ao grupo "${group.name}"!`, group });
+    } catch (error) {
+      if (error instanceof Error) {
+        res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Ocorreu um erro inesperado.' });
+      }
+    }
+  },
 };

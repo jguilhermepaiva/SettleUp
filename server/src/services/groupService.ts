@@ -1,34 +1,35 @@
 import prisma from '../config/prisma';
+import { customAlphabet } from 'nanoid';
 
-// Define o tipo de dado para a criação de um grupo
 interface CreateGroupData {
   name: string;
   description?: string;
-  creatorId: string; // O ID do usuário logado que está criando o grupo
+  creatorId: string;
 }
+
+// Define o alfabeto e o tamanho para o nosso código de convite amigável
+const generateInviteCode = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 6);
 
 export const groupService = {
   createGroup: async (data: CreateGroupData) => {
     const { name, description, creatorId } = data;
 
-    // Validação básica
     if (!name) {
       throw new Error('O nome do grupo é obrigatório.');
     }
 
-    // Usamos uma transação para garantir a consistência dos dados.
-    // Se a criação do membro falhar, a criação do grupo também será revertida.
+    const inviteCode = generateInviteCode();
+
     const newGroup = await prisma.$transaction(async (tx) => {
-      // 1. Cria o grupo
       const group = await tx.group.create({
         data: {
           name,
           description,
           creator_id: creatorId,
+          invite_code: inviteCode,
         },
       });
 
-      // 2. Adiciona o criador como o primeiro membro do grupo
       await tx.groupMember.create({
         data: {
           group_id: group.id,
@@ -42,66 +43,66 @@ export const groupService = {
     return newGroup;
   },
 
-  listGroupsForUser: async (userId: string) => {
-    // Busca todos os registros em 'group_members' que correspondem ao ID do usuário
-    // e inclui os dados completos do grupo relacionado a cada registro.
-    const userGroups = await prisma.groupMember.findMany({
-      where: {
-        user_id: userId,
-      },
-      include: {
-        // Para cada 'groupMember' encontrado, também traz o objeto 'group' correspondente
-        group: true,
-      },
-      orderBy: {
-        // Ordena os grupos pela data de criação, do mais novo para o mais antigo
-        group: {
-          created_at: 'desc',
-        },
-      },
+  joinGroup: async (inviteCode: string, userId: string) => {
+    const group = await prisma.group.findUnique({
+      where: { invite_code: inviteCode },
     });
 
-    // A consulta retorna uma lista de objetos 'groupMember'.
-    // Usamos .map() para extrair apenas os dados do grupo de cada objeto.
-    return userGroups.map(userGroup => userGroup.group);
-  },
-  
-  getGroupDetails: async (groupId: string, userId: string) => {
-    // 1. Verifica se o utilizador é membro do grupo para autorização
-    const membership = await prisma.groupMember.findUnique({
+    if (!group) {
+      throw new Error('Grupo não encontrado ou código de convite inválido.');
+    }
+
+    const existingMembership = await prisma.groupMember.findUnique({
       where: {
         user_id_group_id: {
           user_id: userId,
-          group_id: groupId,
+          group_id: group.id,
         },
       },
     });
 
-    if (!membership) {
-      throw new Error('Acesso negado. O utilizador não pertence a este grupo.');
+    if (existingMembership) {
+      throw new Error('Você já é membro deste grupo.');
     }
 
-    // 2. Se for membro, busca os detalhes completos do grupo
+    await prisma.groupMember.create({
+      data: {
+        group_id: group.id,
+        user_id: userId,
+      },
+    });
+
+    return group;
+  },
+
+  listGroupsForUser: async (userId: string) => {
+    const userGroups = await prisma.groupMember.findMany({
+      where: { user_id: userId },
+      include: { group: true },
+      orderBy: { group: { created_at: 'desc' } },
+    });
+    return userGroups.map(userGroup => userGroup.group);
+  },
+
+  getGroupDetails: async (groupId: string, userId: string) => {
+    const membership = await prisma.groupMember.findUnique({
+      where: { user_id_group_id: { user_id: userId, group_id: groupId } },
+    });
+
+    if (!membership) {
+      throw new Error('Acesso negado. Você não pertence a este grupo.');
+    }
+
     const groupDetails = await prisma.group.findUnique({
       where: { id: groupId },
       include: {
-        members: {
-          include: {
-            user: { select: { id: true, username: true } },
-          },
-        },
+        members: { include: { user: { select: { id: true, username: true } } } },
         expenses: {
           include: {
             payer: { select: { id: true, username: true } },
-            participants: {
-              include: {
-                user: { select: { id: true, username: true } },
-              },
-            },
+            participants: { include: { user: { select: { id: true, username: true } } } },
           },
-          orderBy: {
-            date: 'desc',
-          },
+          orderBy: { date: 'desc' },
         },
       },
     });
@@ -112,6 +113,4 @@ export const groupService = {
 
     return groupDetails;
   },
-
 };
-

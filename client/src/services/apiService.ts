@@ -23,6 +23,7 @@ export interface Group {
   name: string;
   description: string | null;
   creator_id: string;
+  invite_code: string; 
   created_at: string;
   updated_at: string;
 }
@@ -116,6 +117,12 @@ export const apiService = {
     return apiFetch(`/groups/${groupId}/expenses`, {
       method: 'POST',
       body: JSON.stringify(data),
+    });
+  },
+  joinGroup: (inviteCode: string) => {
+    return apiFetch('/groups/join', {
+      method: 'POST',
+      body: JSON.stringify({ inviteCode }),
     });
   },
 };
