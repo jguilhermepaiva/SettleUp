@@ -95,7 +95,7 @@ export const GroupDetailPage: React.FC = () => {
         component={RouterLink}
         to="/"
         startIcon={<ArrowBackIcon />}
-        sx={{ mb: 2 }}
+        sx={{ mb: 2, width: '100%', justifyContent: 'flex-start' }}
       >
         Voltar para Meus Grupos
       </Button>

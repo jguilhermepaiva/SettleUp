@@ -11,7 +11,7 @@ export const Layout: React.FC = () => {
     <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
       <AppBar position="static" elevation={1}>
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold', textAlign: 'start' }}>
             SettleUp
           </Typography>
           <Typography sx={{ mr: 2 }}>
