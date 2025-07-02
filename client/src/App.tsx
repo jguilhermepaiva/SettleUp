@@ -1,6 +1,5 @@
-// /client/src/App.tsx
-
 import React, { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
@@ -8,6 +7,8 @@ import { useAuth } from './hooks/useAuth';
 import { CssBaseline, ThemeProvider, Box, Typography, Link } from '@mui/material';
 import { theme } from './theme';
 import './App.css';
+import { Layout } from './components/Layout';
+import { GroupDetailPage } from './pages/GroupDetailPage';
 
 type AuthView = 'login' | 'register';
 
@@ -38,9 +39,21 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <div className="App">
-        {/* O Container foi removido daqui para permitir que o DashboardPage
-            controle o seu próprio layout de tela cheia. */}
-        {user ? <DashboardPage /> : <AuthRoutes />}
+        <Routes>
+          {user ? (
+            <Route path="/" element={<Layout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="group/:groupId" element={<GroupDetailPage />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Route>
+          ) : (
+            <>
+              <Route path="/auth" element={<AuthRoutes />} />
+              {/* Redireciona qualquer outra rota para a página de autenticação */}
+              <Route path="*" element={<Navigate to="/auth" />} />
+            </>
+          )}
+        </Routes>
       </div>
     </ThemeProvider>
   );

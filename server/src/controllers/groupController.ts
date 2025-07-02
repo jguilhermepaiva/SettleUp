@@ -56,4 +56,30 @@ export const groupController = {
     }
   },
 
+  getDetails: async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) {
+        res.status(400).json({ message: 'ID do utilizador não encontrado no token.' });
+        return;
+      }
+
+      // Pega o ID do grupo dos parâmetros da URL (ex: /api/groups/123)
+      const { groupId } = req.params;
+
+      const group = await groupService.getGroupDetails(groupId, userId);
+      res.status(200).json(group);
+    } catch (error) {
+      if (error instanceof Error) {
+        // Se o erro for de acesso negado, retorna 403 (Forbidden)
+        if (error.message.includes('Acesso negado')) {
+          res.status(403).json({ message: error.message });
+        } else {
+          res.status(404).json({ message: error.message }); // Not Found para outros erros
+        }
+      } else {
+        res.status(500).json({ message: 'Ocorreu um erro inesperado.' });
+      }
+    }
+  },
 };

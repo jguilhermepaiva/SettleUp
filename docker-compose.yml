@@ -1,6 +1,5 @@
 # docker-compose.yml
 # Versão atualizada com healthcheck
-
 version: '3.8'
 
 services:

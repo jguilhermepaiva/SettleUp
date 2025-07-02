@@ -65,4 +65,53 @@ export const groupService = {
     // Usamos .map() para extrair apenas os dados do grupo de cada objeto.
     return userGroups.map(userGroup => userGroup.group);
   },
+  
+  getGroupDetails: async (groupId: string, userId: string) => {
+    // 1. Verifica se o utilizador é membro do grupo para autorização
+    const membership = await prisma.groupMember.findUnique({
+      where: {
+        user_id_group_id: {
+          user_id: userId,
+          group_id: groupId,
+        },
+      },
+    });
+
+    if (!membership) {
+      throw new Error('Acesso negado. O utilizador não pertence a este grupo.');
+    }
+
+    // 2. Se for membro, busca os detalhes completos do grupo
+    const groupDetails = await prisma.group.findUnique({
+      where: { id: groupId },
+      include: {
+        members: {
+          include: {
+            user: { select: { id: true, username: true } },
+          },
+        },
+        expenses: {
+          include: {
+            payer: { select: { id: true, username: true } },
+            participants: {
+              include: {
+                user: { select: { id: true, username: true } },
+              },
+            },
+          },
+          orderBy: {
+            date: 'desc',
+          },
+        },
+      },
+    });
+
+    if (!groupDetails) {
+      throw new Error('Grupo não encontrado.');
+    }
+
+    return groupDetails;
+  },
+
 };
+

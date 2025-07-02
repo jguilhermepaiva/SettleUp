@@ -98,25 +98,6 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1, bgcolor: 'background.default', minHeight: '100vh' }}>
-      <AppBar position="static" elevation={1}>
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            SettleUp
-          </Typography>
-          <Typography sx={{ mr: 2 }}>
-            Olá, {profile?.username}
-          </Typography>
-          <Button 
-            color="inherit" 
-            onClick={logout}
-            startIcon={<LogoutIcon />}
-            sx={{ textTransform: 'none' }}
-          >
-            Sair
-          </Button>
-        </Toolbar>
-      </AppBar>
-
       <Box
         sx={{
           height: '600px',

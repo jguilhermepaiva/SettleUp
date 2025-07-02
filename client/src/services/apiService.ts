@@ -27,6 +27,12 @@ export interface Group {
   updated_at: string;
 }
 
+export interface AddExpenseData {
+  description: string;
+  amount: number;
+  participantIds: string[];
+}
+
 // --- Função Central de Fetch ---
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
   const token = localStorage.getItem('authToken');
@@ -98,6 +104,18 @@ export const apiService = {
   getGroups: (): Promise<Group[]> => {
     return apiFetch('/groups', {
       method: 'GET',
+    });
+  },
+  
+  getGroupDetails: (groupId: string) => {
+    return apiFetch(`/groups/${groupId}`, {
+      method: 'GET',
+    });
+  },
+  addExpense: (groupId: string, data: AddExpenseData) => {
+    return apiFetch(`/groups/${groupId}/expenses`, {
+      method: 'POST',
+      body: JSON.stringify(data),
     });
   },
 };
