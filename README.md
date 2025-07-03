@@ -52,7 +52,7 @@ Siga os passos abaixo para configurar e rodar o projeto na sua máquina.
 
 1.  **Clone o repositório:**
     
-    git clone https://github.com/jguilhermepaiva/SettleUp.git
+    git clone https://github.com/jguilhermepaiva/SettleUp.git <br/>
     cd SettleUp
     
 
@@ -61,7 +61,7 @@ Siga os passos abaixo para configurar e rodar o projeto na sua máquina.
     * Instale as dependências: `npm install`
     * Crie um ficheiro `.env` na pasta `server/` e adicione o seguinte conteúdo:
         
-        DATABASE_URL="postgresql://settleup_user:SEU-USER@localhost:5433/settleup_db"
+        DATABASE_URL="postgresql://settleup_user:SEU-USER@localhost:5433/settleup_db" <br/>
         JWT_SECRET="SEU-TOKEN-SUPER-SECRETO-PARA-JWT"
         
 
