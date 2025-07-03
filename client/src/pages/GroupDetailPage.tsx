@@ -6,6 +6,7 @@ import { Container, Typography, Box, CircularProgress, Alert, Paper, List, ListI
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { AddExpenseForm } from '../components/expense/AddExpenseForm';
 import { ExpenseList } from '../components/expense/ExpenseList';
+import { BalanceSummary } from '../components/group/BalanceSummary'; 
 
 // Define um tipo para os detalhes do grupo, incluindo os membros
 interface GroupDetails {
@@ -110,6 +111,9 @@ export const GroupDetailPage: React.FC = () => {
 
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
         <Box sx={{ width: { xs: '100%', md: '70%' } }}>
+          <Box sx={{ mb: 4 }}>
+            <BalanceSummary groupId={groupId!} />
+          </Box>
           <Paper elevation={2} sx={{ p: 2, mb: 4 }}>
             <Typography variant="h6">Adicionar Nova Despesa</Typography>
             <AddExpenseForm

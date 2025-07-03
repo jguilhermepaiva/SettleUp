@@ -23,5 +23,7 @@ router.get('/:groupId', groupController.getDetails);
 
 router.use('/:groupId/expenses', expenseRoutes);
 
+router.get('/:groupId/balance', groupController.getBalance);
+
 
 export default router;

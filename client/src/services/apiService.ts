@@ -125,4 +125,9 @@ export const apiService = {
       body: JSON.stringify({ inviteCode }),
     });
   },
+  getGroupBalance: (groupId: string) => {
+    return apiFetch(`/groups/${groupId}/balance`, {
+      method: 'GET',
+    });
+  },
 };

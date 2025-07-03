@@ -2,8 +2,6 @@
 
 import { Response } from 'express';
 import { groupService } from '../services/groupService';
-
-// Importamos nossa interface customizada para requisições autenticadas
 import type { AuthenticatedRequest } from '../middleware/authMiddleware';
 
 export const groupController = {
@@ -104,6 +102,31 @@ export const groupController = {
     } catch (error) {
       if (error instanceof Error) {
         res.status(400).json({ message: error.message });
+      } else {
+        res.status(500).json({ message: 'Ocorreu um erro inesperado.' });
+      }
+    }
+  },
+
+  getBalance: async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) {
+        res.status(400).json({ message: 'ID do utilizador não encontrado no token.' });
+        return;
+      }
+      
+      const { groupId } = req.params;
+      const balanceData = await groupService.getGroupBalance(groupId, userId);
+      
+      res.status(200).json(balanceData);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('Acesso negado')) {
+          res.status(403).json({ message: error.message });
+        } else {
+          res.status(404).json({ message: error.message });
+        }
       } else {
         res.status(500).json({ message: 'Ocorreu um erro inesperado.' });
       }
