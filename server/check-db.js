@@ -1,5 +1,3 @@
-// /server/check-db.js
-
 // 1. Carrega as variáveis do arquivo .env
 require('dotenv').config();
 
