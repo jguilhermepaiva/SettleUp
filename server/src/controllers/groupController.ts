@@ -132,4 +132,28 @@ export const groupController = {
       }
     }
   },
+  delete: async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const userId = req.user?.userId;
+      if (!userId) {
+        res.status(400).json({ message: 'ID do utilizador não encontrado no token.' });
+        return;
+      }
+
+      const { groupId } = req.params;
+      await groupService.deleteGroup(groupId, userId);
+
+      res.status(204).send(); // Sucesso, sem conteúdo
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('Acesso negado')) {
+          res.status(403).json({ message: error.message }); // Forbidden
+        } else {
+          res.status(404).json({ message: error.message }); // Not Found
+        }
+      } else {
+        res.status(500).json({ message: 'Ocorreu um erro inesperado.' });
+      }
+    }
+  },
 };

@@ -27,6 +27,7 @@ export const DashboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isCreatingGroup, setIsCreatingGroup] = useState(false);
+  const [deleteGroupError, setDeleteGroupError] = useState<string | null>(null);
   const [groupCreationError, setGroupCreationError] = useState<string | null>(null);
   const [groupCreationSuccess, setGroupCreationSuccess] = useState<string | null>(null);
   
@@ -64,6 +65,16 @@ export const DashboardPage: React.FC = () => {
       setGroupCreationError(err instanceof Error ? err.message : 'Ocorreu um erro inesperado.');
     } finally {
       setIsCreatingGroup(false);
+    }
+  };
+
+  const handleDeleteGroup = async (groupId: string) => {
+    setDeleteGroupError(null);
+    try {
+      await apiService.deleteGroup(groupId);
+      setRefreshTrigger(prev => prev + 1); // Atualiza a lista de grupos
+    } catch (err) {
+      setDeleteGroupError(err instanceof Error ? err.message : 'Falha ao excluir o grupo.');
     }
   };
 
@@ -119,7 +130,8 @@ export const DashboardPage: React.FC = () => {
             <Typography variant="h6" component="h2" gutterBottom>
               Meus Grupos
             </Typography>
-            <GroupList refreshTrigger={refreshTrigger} />
+            {deleteGroupError && <Alert severity="error" sx={{ mb: 2 }}>{deleteGroupError}</Alert>}
+            <GroupList refreshTrigger={refreshTrigger} onDelete={handleDeleteGroup} />
           </Paper>
         </Box>
       </Box>

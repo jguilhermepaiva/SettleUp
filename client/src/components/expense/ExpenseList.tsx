@@ -1,17 +1,19 @@
-// /client/src/components/expense/ExpenseList.tsx
-
 import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText, Divider, Chip } from '@mui/material';
+import { Box, Typography, List, ListItem, ListItemText, Divider, Chip, IconButton, Tooltip } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 // Definimos os tipos para os dados que esperamos receber
 interface Payer {
   username: string;
 }
 interface Participant {
-  user: { username: string };
+  user: {
+      id: any; username: string 
+};
   share_amount: number;
 }
-interface Expense {
+export interface Expense {
   id: string;
   description: string;
   amount: number;
@@ -22,9 +24,11 @@ interface Expense {
 
 interface ExpenseListProps {
   expenses: Expense[];
+  onDelete: (expenseId: string) => void;
+  onEdit: (expense: Expense) => void;
 }
 
-export const ExpenseList: React.FC<ExpenseListProps> = ({ expenses }) => {
+export const ExpenseList: React.FC<ExpenseListProps> = ({ expenses, onDelete, onEdit }) => {
   if (expenses.length === 0) {
     return <Typography>Nenhuma despesa adicionada ainda.</Typography>;
   }
@@ -33,7 +37,23 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ expenses }) => {
     <List>
       {expenses.map((expense, index) => (
         <React.Fragment key={expense.id}>
-          <ListItem alignItems="flex-start">
+          <ListItem
+            alignItems="flex-start"
+            secondaryAction={
+              <Box>
+                <Tooltip title="Editar Despesa">
+                  <IconButton edge="end" aria-label="edit" onClick={() => onEdit(expense)}>
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Excluir Despesa">
+                  <IconButton edge="end" aria-label="delete" onClick={() => onDelete(expense.id)} sx={{ ml: 1 }}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Box>
+            }
+          >
             <ListItemText
               primary={
                 <Typography variant="h6">
@@ -52,6 +72,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ expenses }) => {
                   </Box>
                 </React.Fragment>
               }
+              slotProps={{ secondary: { component: 'div' } }}
             />
           </ListItem>
           {index < expenses.length - 1 && <Divider component="li" />}

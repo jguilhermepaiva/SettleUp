@@ -33,6 +33,7 @@ export interface AddExpenseData {
   amount: number;
   participantIds: string[];
 }
+export interface UpdateExpenseData extends AddExpenseData {}
 
 // --- Função Central de Fetch ---
 const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
@@ -55,8 +56,7 @@ const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
     headers,
   });
 
-  // --- LOG DE DEPURAÇÃO ADICIONADO ---
-  console.log(`[apiService] Resposta para ${endpoint}: Status ${response.status}, OK: ${response.ok}`);
+
 
   if (!response.ok) {
     // --- LOG DE DEPURAÇÃO ADICIONADO ---
@@ -101,6 +101,12 @@ export const apiService = {
       body: JSON.stringify(data),
     });
   },
+
+  deleteGroup: (groupId: string) => {
+    return apiFetch(`/groups/${groupId}`, {
+      method: 'DELETE',
+    });
+  },
   
   getGroups: (): Promise<Group[]> => {
     return apiFetch('/groups', {
@@ -116,6 +122,18 @@ export const apiService = {
   addExpense: (groupId: string, data: AddExpenseData) => {
     return apiFetch(`/groups/${groupId}/expenses`, {
       method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  deleteExpense: (groupId: string, expenseId: string) => {
+    return apiFetch(`/groups/${groupId}/expenses/${expenseId}`, {
+      method: 'DELETE',
+    });
+  },
+  updateExpense: (groupId: string, expenseId: string, data: UpdateExpenseData) => {
+    return apiFetch(`/groups/${groupId}/expenses/${expenseId}`, {
+      method: 'PUT',
       body: JSON.stringify(data),
     });
   },

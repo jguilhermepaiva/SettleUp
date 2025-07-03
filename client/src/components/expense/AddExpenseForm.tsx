@@ -43,6 +43,18 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ members, onSubmi
     setParticipantIds([]);
   };
 
+  // Verifica se todos os membros estão selecionados
+  const areAllSelected = members.length > 0 && participantIds.length === members.length;
+
+  // Função para selecionar ou desmarcar todos
+  const handleSelectAll = () => {
+    if (areAllSelected) {
+      setParticipantIds([]); // Desmarca todos
+    } else {
+      setParticipantIds(members.map(member => member.user.id)); // Marca todos
+    }
+  };
+
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <TextField
@@ -65,6 +77,9 @@ export const AddExpenseForm: React.FC<AddExpenseFormProps> = ({ members, onSubmi
       />
       <Box>
         <Typography variant="subtitle1" gutterBottom>Dividir com:</Typography>
+        <Button size="small" onClick={handleSelectAll}>
+            {areAllSelected ? 'Desmarcar Todos' : 'Marcar Todos'}
+          </Button>
         <FormGroup sx={{ display: 'flex', flexDirection: 'row' }}>
           {members.map(member => (
             <FormControlLabel

@@ -6,9 +6,10 @@ import { GroupListItem } from './GroupListItem';
 interface GroupListProps {
   // Recebe um 'gatilho' para saber quando deve recarregar a lista (ex: após criar um novo grupo)
   refreshTrigger: number;
+  onDelete: (groupId: string) => void;
 }
 
-export const GroupList: React.FC<GroupListProps> = ({ refreshTrigger }) => {
+export const GroupList: React.FC<GroupListProps> = ({ refreshTrigger, onDelete }) => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +39,11 @@ export const GroupList: React.FC<GroupListProps> = ({ refreshTrigger }) => {
       {groups.length === 0 ? (
         <p>Ainda não pertence a nenhum grupo. Crie um acima!</p>
       ) : (
-        groups.map(group => <GroupListItem key={group.id} group={group} />)
+        groups.map(group => <GroupListItem 
+            key={group.id} 
+            group={group} 
+            onDelete={onDelete} // 2. Passamos a função onDelete para cada item da lista
+          />)
       )}
     </div>
   );

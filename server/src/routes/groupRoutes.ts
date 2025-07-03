@@ -15,6 +15,8 @@ router.use(authMiddleware);
 // POST /api/groups/ -> Cria um novo grupo
 router.post('/', groupController.create);
 
+router.delete('/:groupId', groupController.delete);
+
 // GET /api/groups/ -> Lista os grupos do utilizador logado
 router.get('/', groupController.list);
 
@@ -24,6 +26,8 @@ router.get('/:groupId', groupController.getDetails);
 router.use('/:groupId/expenses', expenseRoutes);
 
 router.get('/:groupId/balance', groupController.getBalance);
+
+
 
 
 export default router;

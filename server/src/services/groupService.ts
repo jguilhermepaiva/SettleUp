@@ -198,4 +198,43 @@ export const groupService = {
     };
   },
 
+  deleteGroup: async (groupId: string, userId: string) => {
+    // 1. Busca o grupo para verificar quem é o criador
+    const group = await prisma.group.findUnique({
+      where: { id: groupId },
+    });
+
+    if (!group) {
+      throw new Error('Grupo não encontrado.');
+    }
+
+    // 2. Autorização: Apenas o criador do grupo pode excluí-lo
+    if (group.creator_id !== userId) {
+      throw new Error('Acesso negado. Apenas o criador pode excluir o grupo.');
+    }
+
+    // 3. Usa uma transação para apagar todos os dados relacionados em ordem
+    return prisma.$transaction(async (tx) => {
+      // Apaga primeiro os participantes das despesas do grupo
+      await tx.expenseParticipant.deleteMany({
+        where: { expense: { group_id: groupId } },
+      });
+
+      // Depois, apaga as despesas do grupo
+      await tx.expense.deleteMany({
+        where: { group_id: groupId },
+      });
+
+      // Depois, apaga os membros do grupo
+      await tx.groupMember.deleteMany({
+        where: { group_id: groupId },
+      });
+
+      // Finalmente, apaga o grupo
+      await tx.group.delete({
+        where: { id: groupId },
+      });
+    });
+  },
+
 };
