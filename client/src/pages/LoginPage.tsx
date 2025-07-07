@@ -3,7 +3,7 @@ import { LoginForm } from '../components/LoginForm';
 import { apiService } from '../services/apiService';
 import type { LoginData } from '../services/apiService';
 import { useAuth } from '../hooks/useAuth';
-import { Container, Box, Typography, Alert } from '@mui/material';
+import { Box, Typography, Alert } from '@mui/material';
 
 export const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,23 +30,23 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Entrar no SettleUp
-        </Typography>
-        <Box sx={{ mt: 3, width: '100%' }}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-        </Box>
-      </Box>
-    </Container>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        color: 'white',
+      }}
+    >
+      <Typography component="h1" variant="h3" sx={{ fontWeight: 'bold' }}>
+        SettleUp
+      </Typography>
+      <Typography component="p" variant="h6" sx={{ mb: 4, color: 'rgba(255, 255, 255, 0.7)' }}>
+        Faça seu login
+      </Typography>
+      
+      {error && <Alert severity="error" sx={{ mb: 2, width: '100%' }}>{error}</Alert>}
+      <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+    </Box>
   );
 };

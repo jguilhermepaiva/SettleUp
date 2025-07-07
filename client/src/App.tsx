@@ -3,32 +3,49 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { GroupDetailPage } from './pages/GroupDetailPage';
+import { Layout } from './components/Layout';
+import { AuthLayout } from './components/AuthLayout';
 import { useAuth } from './hooks/useAuth';
-import { CssBaseline, ThemeProvider, Box, Typography, Link } from '@mui/material';
+import { CssBaseline, ThemeProvider, Box, Button } from '@mui/material';
 import { theme } from './theme';
 import './App.css';
-import { Layout } from './components/Layout';
-import { GroupDetailPage } from './pages/GroupDetailPage';
 
 type AuthView = 'login' | 'register';
 
 function AuthRoutes() {
-  const [currentView, setCurrentView] = useState<AuthView>('register');
+  const [currentView, setCurrentView] = useState<AuthView>('login');
+
   const toggleView = () => {
     setCurrentView(currentView === 'register' ? 'login' : 'register');
   };
 
   return (
-    // O Container foi removido daqui e movido para dentro da LoginPage/RegisterPage
-    <Box>
-      {currentView === 'register' ? <RegisterPage /> : <LoginPage />}
-      <Typography variant="body2" color="text.secondary" align="center" sx={{ mt: 3 }}>
-        {currentView === 'register' ? 'Já tem uma conta? ' : 'Não tem uma conta? '}
-        <Link component="button" variant="body2" onClick={toggleView}>
-          {currentView === 'register' ? 'Faça login' : 'Registre-se'}
-        </Link>
-      </Typography>
-    </Box>
+    <AuthLayout>
+      <Box>
+        {currentView === 'register' ? <RegisterPage /> : <LoginPage />}
+        
+        {/* Botão de navegação atualizado */}
+        <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Button
+            onClick={toggleView}
+            sx={{
+              color: 'white',
+              textTransform: 'none', // Impede que o texto fique em maiúsculas
+              fontWeight: 'normal',
+              backgroundColor: 'transparent',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            {currentView === 'login' ? 'Criar sua Conta' : 'Logar na sua conta'}
+          </Button>
+        </Box>
+
+      </Box>
+    </AuthLayout>
   );
 }
 
@@ -48,8 +65,8 @@ function App() {
             </Route>
           ) : (
             <>
+              <Route path="/" element={<Navigate to="/auth" />} />
               <Route path="/auth" element={<AuthRoutes />} />
-              {/* Redireciona qualquer outra rota para a página de autenticação */}
               <Route path="*" element={<Navigate to="/auth" />} />
             </>
           )}

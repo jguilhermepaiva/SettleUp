@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import type { RegisterData } from '../services/apiService';
-import { Box, TextField, Button, CircularProgress, Alert } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, InputLabel, FilledInput, InputAdornment, Alert } from '@mui/material';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 interface RegisterFormProps {
   onSubmit: (data: RegisterData) => Promise<void>;
@@ -24,59 +27,116 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading 
     onSubmit({ username, email, password, confirmPassword });
   };
 
+  const inputStyle = {
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    color: 'white',
+    '& .MuiInputBase-input:-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px rgb(14, 25, 56) inset',
+      WebkitTextFillColor: '#fff',
+    },
+  };
+
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}
+      sx={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: 2, 
+        width: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: { xs: 3, sm: 4 },
+        borderRadius: 2,
+      }}
     >
       {error && <Alert severity="error" sx={{ mb: 1 }}>{error}</Alert>}
-      <TextField
-        label="Nome de usuário"
-        variant="outlined"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        required
-        fullWidth
-      />
-      <TextField
-        label="Email"
-        variant="outlined"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        fullWidth
-      />
-      <TextField
-        label="Senha"
-        variant="outlined"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        fullWidth
-        inputProps={{ minLength: 6 }}
-      />
-      <TextField
-        label="Confirmar senha"
-        variant="outlined"
-        type="password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        required
-        fullWidth
-        inputProps={{ minLength: 6 }}
-      />
+      
+      <FormControl variant="filled" fullWidth required>
+        <InputLabel htmlFor="register-username" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Nome de utilizador</InputLabel>
+        <FilledInput
+          id="register-username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          disableUnderline
+          sx={inputStyle}
+          startAdornment={
+            <InputAdornment position="start">
+              <PersonOutlineIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+
+      <FormControl variant="filled" fullWidth required>
+        <InputLabel htmlFor="register-email" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Email</InputLabel>
+        <FilledInput
+          id="register-email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disableUnderline
+          sx={inputStyle}
+          startAdornment={
+            <InputAdornment position="start">
+              <EmailOutlinedIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+
+      <FormControl variant="filled" fullWidth required>
+        <InputLabel htmlFor="register-password" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Senha</InputLabel>
+        <FilledInput
+          id="register-password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disableUnderline
+          sx={inputStyle}
+          startAdornment={
+            <InputAdornment position="start">
+              <LockOutlinedIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+
+      <FormControl variant="filled" fullWidth required>
+        <InputLabel htmlFor="register-confirm-password" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Confirmar Senha</InputLabel>
+        <FilledInput
+          id="register-confirm-password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          disableUnderline
+          sx={inputStyle}
+          startAdornment={
+            <InputAdornment position="start">
+              <LockOutlinedIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} />
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+
       <Button
         type="submit"
         variant="contained"
-        color="primary"
         disabled={isLoading}
         size="large"
-        sx={{ mt: 1 }}
+        sx={{
+          mt: 2,
+          py: 1.5,
+          fontWeight: 'bold',
+          background: 'linear-gradient(to right, #14b8a6, #6366f1)',
+          transition: 'box-shadow 0.3s ease-in-out',
+          '&:hover': {
+            boxShadow: '0px 0px 15px rgba(20, 184, 166, 0.5)',
+          }
+        }}
       >
-        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Registrar'}
+        {isLoading ? <CircularProgress size={24} color="inherit" /> : 'CRIAR CONTA'}
       </Button>
     </Box>
   );

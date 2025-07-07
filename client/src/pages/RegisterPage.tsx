@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RegisterForm } from '../components/RegisterForm';
 import { apiService } from '../services/apiService';
 import type { RegisterData } from '../services/apiService';
-import { Container, Box, Typography, Alert } from '@mui/material';
+import { Box, Typography, Alert } from '@mui/material';
 
 export const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,7 +16,7 @@ export const RegisterPage: React.FC = () => {
 
     try {
       const newUser = await apiService.registerUser(data);
-      setSuccess(`Usuário "${newUser.username}" registrado com sucesso! Por favor, faça o login.`);
+      setSuccess(`Utilizador "${newUser.username}" registado com sucesso! Por favor, faça o login.`);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -29,24 +29,25 @@ export const RegisterPage: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      >
-        <Typography component="h1" variant="h5">
-          Criar conta no SettleUp
-        </Typography>
-        <Box sx={{ mt: 3, width: '100%' }}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-          {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
-          <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
-        </Box>
-      </Box>
-    </Container>
+    // A estrutura agora é muito mais simples e alinhada com a LoginPage
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        color: 'white',
+      }}
+    >
+      <Typography component="h1" variant="h3" sx={{ fontWeight: 'bold' }}>
+        SettleUp
+      </Typography>
+      <Typography component="p" variant="h6" sx={{ mb: 4, color: 'rgba(255, 255, 255, 0.7)' }}>
+        Crie sua conta
+      </Typography>
+      
+      {error && <Alert severity="error" sx={{ mb: 2, width: '100%' }}>{error}</Alert>}
+      {success && <Alert severity="success" sx={{ mb: 2, width: '100%' }}>{success}</Alert>}
+      <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
+    </Box>
   );
 };
