@@ -1,8 +1,9 @@
 // /server/src/services/userService.ts
-import { Prisma } from '@prisma/client';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
 import prisma from '../config/prisma';
+import { Prisma } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { customAlphabet } from 'nanoid';
 
 type CreateUserData = Prisma.UserCreateInput & { confirmPassword?: string };
 
@@ -35,18 +36,22 @@ export const userService = {
     return userWithoutPassword;
   },
 
-  loginUser: async (email, password) => {
+  loginUser: async (email: string, password: string) => {
     const user = await prisma.user.findUnique({
       where: { email },
     });
+
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
       throw new Error('Email ou senha inválidos');
     }
+
     const token = jwt.sign(
       { userId: user.id, username: user.username },
       process.env.JWT_SECRET as string,
       { expiresIn: '1d' }
     );
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password_hash, ...userWithoutPassword } = user;
     return { user: userWithoutPassword, token };
   },

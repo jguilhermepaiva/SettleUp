@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api';
 
 // --- Interfaces de Dados ---
 export interface RegisterData {
@@ -33,6 +33,7 @@ export interface AddExpenseData {
   amount: number;
   participantIds: string[];
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface UpdateExpenseData extends AddExpenseData {}
 
 // --- Função Central de Fetch ---
