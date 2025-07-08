@@ -10,6 +10,7 @@ import { useAuth } from './hooks/useAuth';
 import { CssBaseline, ThemeProvider, Box, Button } from '@mui/material';
 import { theme } from './theme';
 import './App.css';
+import friend1 from './assets/friend1.png';
 
 type AuthView = 'login' | 'register';
 
@@ -26,7 +27,7 @@ function AuthRoutes() {
         {currentView === 'register' ? <RegisterPage /> : <LoginPage />}
         
         {/* Botão de navegação atualizado */}
-        <Box sx={{ mt: 3, textAlign: 'center' }}>
+        <Box sx={{ mt: 3, textAlign: 'center', display: 'flex',  alignItems: 'center', justifyContent: 'center' }}>
           <Button
             onClick={toggleView}
             sx={{
@@ -42,6 +43,7 @@ function AuthRoutes() {
           >
             {currentView === 'login' ? 'Criar sua Conta' : 'Logar na sua conta'}
           </Button>
+         
         </Box>
 
       </Box>
