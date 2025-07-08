@@ -9,8 +9,8 @@ Bem-vindo ao SettleUp! Uma aplicação full-stack construída para simplificar a
 
 A aplicação está totalmente funcional e hospedada na nuvem.
 
-* **Frontend (Vercel):** <a href="https://seu-link-do-vercel.app](https://settle-up-nu.vercel.app/" target="_blank" rel="noopener noreferrer">**Acesse a aplicação aqui!**</a>
-* **Backend (Render):** <a href="https://seu-link-do-render.com](https://settleup-api.onrender.com" target="_blank" rel="noopener noreferrer">Link da API</a>
+* **Frontend (Vercel):** <a href="https://settle-up-nu.vercel.app/" target="_blank" rel="noopener noreferrer">**Acesse a aplicação aqui!**</a>
+* **Backend (Render):** <a href="https://settleup-api.onrender.com" target="_blank" rel="noopener noreferrer">Link da API</a>
 
 **Nota Importante:** O backend está hospedado no plano gratuito do Render e "adormece" após um período de inatividade. Ao aceder à aplicação pela primeira vez, a primeira tentativa de login ou registo pode falhar. **Para "acordar" o servidor, basta clicar no link da API acima.** Aguarde até ver uma mensagem de sucesso (ou um erro, o importante é que responda) e, em seguida, a aplicação frontend funcionará perfeitamente.
 
