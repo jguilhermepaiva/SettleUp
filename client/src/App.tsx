@@ -10,7 +10,6 @@ import { useAuth } from './hooks/useAuth';
 import { CssBaseline, ThemeProvider, Box, Button } from '@mui/material';
 import { theme } from './theme';
 import './App.css';
-import friend1 from './assets/friend1.png';
 
 type AuthView = 'login' | 'register';
 
